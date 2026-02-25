@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="InkFlow" />
+  <meta name="description" content="Premium manga & comic reader for Android tablet" />
+
+  <title>InkFlow — Premium Reader</title>
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- PDF.js via CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     SPLASH / LOADING SCREEN
+═══════════════════════════════════════════════ -->
+<div id="splash" class="splash">
+  <div class="splash-logo">
+    <svg class="splash-icon" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="8" y="4" width="32" height="44" rx="3" fill="url(#g1)"/>
+      <rect x="14" y="10" width="32" height="44" rx="3" fill="url(#g2)" opacity="0.7"/>
+      <rect x="20" y="16" width="32" height="44" rx="3" fill="url(#g3)" opacity="0.5"/>
+      <defs>
+        <linearGradient id="g1" x1="8" y1="4" x2="40" y2="48" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#a78bfa"/>
+          <stop offset="1" stop-color="#6366f1"/>
+        </linearGradient>
+        <linearGradient id="g2" x1="14" y1="10" x2="46" y2="54" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#818cf8"/>
+          <stop offset="1" stop-color="#4f46e5"/>
+        </linearGradient>
+        <linearGradient id="g3" x1="20" y1="16" x2="52" y2="60" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#6366f1"/>
+          <stop offset="1" stop-color="#3730a3"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <span class="splash-title">InkFlow</span>
+  </div>
+  <div class="splash-loader">
+    <div class="splash-bar"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     LIBRARY VIEW
+═══════════════════════════════════════════════ -->
+<div id="library" class="library hidden">
+
+  <!-- Library Header -->
+  <header class="lib-header">
+    <div class="lib-header-inner">
+      <div class="lib-logo">
+        <svg viewBox="0 0 32 32" fill="none" class="lib-logo-icon">
+          <rect x="3" y="2" width="17" height="24" rx="2" fill="url(#lg1)"/>
+          <rect x="7" y="5" width="17" height="24" rx="2" fill="url(#lg2)" opacity="0.6"/>
+          <defs>
+            <linearGradient id="lg1" x1="3" y1="2" x2="20" y2="26" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#a78bfa"/><stop offset="1" stop-color="#6366f1"/>
+            </linearGradient>
+            <linearGradient id="lg2" x1="7" y1="5" x2="24" y2="29" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#818cf8"/><stop offset="1" stop-color="#4338ca"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <span>InkFlow</span>
+      </div>
+      <div class="lib-actions">
+        <button id="btnAddComic" class="btn-add" aria-label="Add comic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          <span>Add PDF</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hidden file picker -->
+  <input type="file" id="fileInput" accept=".pdf,application/pdf" multiple style="display:none" />
+
+  <!-- Library Body -->
+  <main class="lib-body">
+
+    <!-- Continue Reading -->
+    <section id="continueSection" class="lib-section hidden">
+      <h2 class="section-title">Continue Reading</h2>
+      <div id="continueGrid" class="continue-grid"></div>
+    </section>
+
+    <!-- All Comics -->
+    <section class="lib-section">
+      <div class="section-header">
+        <h2 class="section-title" id="allComicsTitle">My Library</h2>
+        <div id="sortToggle" class="sort-toggle hidden">
+          <button class="sort-btn active" data-sort="title">Name</button>
+          <button class="sort-btn" data-sort="recent">Recent</button>
+        </div>
+      </div>
+      <div id="comicGrid" class="comic-grid"></div>
+      <div id="emptyState" class="empty-state">
+        <div class="empty-icon">
+          <svg viewBox="0 0 80 80" fill="none">
+            <circle cx="40" cy="40" r="36" fill="#1a1a2e" stroke="#2d2d4e" stroke-width="2"/>
+            <rect x="22" y="20" width="24" height="32" rx="3" fill="#2d2d4e"/>
+            <rect x="30" y="24" width="24" height="32" rx="3" fill="#3d3d6e" opacity="0.8"/>
+            <line x1="40" y1="36" x2="40" y2="48" stroke="#6366f1" stroke-width="2" stroke-linecap="round"/>
+            <line x1="34" y1="42" x2="46" y2="42" stroke="#6366f1" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h3>No comics yet</h3>
+        <p>Tap <strong>Add PDF</strong> to import your manga or comics</p>
+        <button class="btn-empty-add" id="btnEmptyAdd">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+          Import PDF
+        </button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     READER VIEW
+═══════════════════════════════════════════════ -->
+<div id="reader" class="reader hidden">
+
+  <!-- Reader Top Bar (hidden by default) -->
+  <div id="readerTopBar" class="reader-top-bar reader-ui">
+    <button id="btnClose" class="reader-btn" aria-label="Back to library">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <div class="reader-title-wrap">
+      <h1 id="readerTitle" class="reader-title"></h1>
+      <span id="readerPageLabel" class="reader-page-label"></span>
+    </div>
+    <div class="reader-top-actions">
+      <button id="btnModeToggle" class="reader-btn" aria-label="Toggle reading mode">
+        <svg id="iconVertical" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="6" y="3" width="12" height="8" rx="1.5"/><rect x="6" y="13" width="12" height="8" rx="1.5"/>
+        </svg>
+        <svg id="iconHorizontal" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="hidden">
+          <rect x="3" y="6" width="8" height="12" rx="1.5"/><rect x="13" y="6" width="8" height="12" rx="1.5"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Reader Viewport -->
+  <div id="readerViewport" class="reader-viewport">
+    <!-- Pages injected here by JS -->
+    <div id="pagesContainer" class="pages-container"></div>
+  </div>
+
+  <!-- Reader Bottom Bar (hidden by default) -->
+  <div id="readerBottomBar" class="reader-bottom-bar reader-ui">
+    <div class="progress-area">
+      <div class="progress-track" id="progressTrack">
+        <div class="progress-fill" id="progressFill"></div>
+        <div class="progress-thumb" id="progressThumb"></div>
+      </div>
+      <div class="progress-labels">
+        <span class="progress-label-start">1</span>
+        <span class="progress-label-end" id="totalPagesLabel"></span>
+      </div>
+    </div>
+    <div class="reader-bottom-actions">
+      <button id="btnPrevPage" class="reader-btn reader-nav-btn" aria-label="Previous page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+      <span id="currentPageNum" class="page-counter">1</span>
+      <button id="btnNextPage" class="reader-btn reader-nav-btn" aria-label="Next page">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <polyline points="9 18 15 12 9 6"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Left/Right edge tap zones (horizontal mode & edge nav) -->
+  <div id="tapZoneLeft" class="tap-zone tap-zone-left"></div>
+  <div id="tapZoneRight" class="tap-zone tap-zone-right"></div>
+
+  <!-- Zoom reset hint -->
+  <div id="zoomHint" class="zoom-hint reader-ui">
+    <span id="zoomLevel">100%</span>
+  </div>
+
+  <!-- Loading overlay -->
+  <div id="readerLoader" class="reader-loader">
+    <div class="reader-spinner"></div>
+    <span id="readerLoaderText">Opening...</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     CONTEXT MENU (long press on library item)
+═══════════════════════════════════════════════ -->
+<div id="contextMenu" class="context-menu hidden">
+  <div class="context-menu-header">
+    <span id="contextMenuTitle" class="context-menu-title"></span>
+  </div>
+  <button class="context-item" id="ctxRead">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polygon points="5 3 19 12 5 21 5 3"/>
+    </svg>
+    Read
+  </button>
+  <button class="context-item" id="ctxReset">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3"/>
+    </svg>
+    Reset Progress
+  </button>
+  <button class="context-item danger" id="ctxDelete">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+      <path d="M10 11v6"/><path d="M14 11v6"/>
+    </svg>
+    Delete
+  </button>
+</div>
+<div id="contextOverlay" class="context-overlay hidden"></div>
+
+<!-- ═══════════════════════════════════════════════
+     TOAST NOTIFICATIONS
+═══════════════════════════════════════════════ -->
+<div id="toastContainer" class="toast-container"></div>
+
+<script src="db.js"></script>
+<script src="gestures.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
