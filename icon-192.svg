@@ -1,17 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-  <rect width="192" height="192" rx="36" fill="#0a0a0f"/>
-  <rect x="34" y="28" width="80" height="110" rx="8" fill="url(#i1)"/>
-  <rect x="52" y="44" width="80" height="110" rx="8" fill="url(#i2)" opacity="0.7"/>
-  <rect x="70" y="60" width="80" height="110" rx="8" fill="url(#i3)" opacity="0.5"/>
-  <defs>
-    <linearGradient id="i1" x1="34" y1="28" x2="114" y2="138" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#a78bfa"/><stop offset="1" stop-color="#6366f1"/>
-    </linearGradient>
-    <linearGradient id="i2" x1="52" y1="44" x2="132" y2="154" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#818cf8"/><stop offset="1" stop-color="#4f46e5"/>
-    </linearGradient>
-    <linearGradient id="i3" x1="70" y1="60" x2="150" y2="170" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#6366f1"/><stop offset="1" stop-color="#3730a3"/>
-    </linearGradient>
-  </defs>
+  <rect width="192" height="192" rx="36" fill="#0a1030"/>
+  <!-- left side (dark dirt) -->
+  <polygon points="40,70 96,102 96,158 40,126" fill="#6b4f2e"/>
+  <polygon points="40,70 96,102 96,112 40,80" fill="#4f7a2e"/>
+  <!-- right side (mid dirt) -->
+  <polygon points="152,70 96,102 96,158 152,126" fill="#8a663d"/>
+  <polygon points="152,70 96,102 96,112 152,80" fill="#5fae3b"/>
+  <!-- top (grass) -->
+  <polygon points="96,38 152,70 96,102 40,70" fill="#5fae3b"/>
+  <polygon points="96,38 152,70 96,102 40,70" fill="none" stroke="#4f7a2e" stroke-width="2"/>
 </svg>
