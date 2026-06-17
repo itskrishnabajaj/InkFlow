@@ -1,13 +1,13 @@
 {
-  "name": "InkFlow — Premium Reader",
-  "short_name": "InkFlow",
-  "description": "Premium manga and comic PDF reader for Android tablet",
+  "name": "InkCraft",
+  "short_name": "InkCraft",
+  "description": "A voxel building game you can play in your browser.",
   "start_url": "./index.html",
   "display": "fullscreen",
-  "orientation": "any",
-  "theme_color": "#0a0a0f",
-  "background_color": "#0a0a0f",
-  "categories": ["entertainment", "books"],
+  "orientation": "landscape",
+  "theme_color": "#87c5ff",
+  "background_color": "#0a1030",
+  "categories": ["games"],
   "icons": [
     {
       "src": "icon-192.svg",
