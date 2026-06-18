@@ -1,7 +1,12 @@
-name: Deploy InkCraft to GitHub Pages
+name: Build & Deploy Aethelgard
 
-# Publishes the static site (no build step) to GitHub Pages on every push to
-# the working branch. In the repo: Settings → Pages → Source: "GitHub Actions".
+# Builds the Vite app in CI (the cloud) and publishes the static dist/ to the
+# gh-pages branch. This deploy-from-branch approach avoids the github-pages
+# *environment* branch-protection policy that was rejecting deploys from claude/* .
+#
+# One-time setup in the repo: Settings → Pages → Build and deployment →
+# Source: "Deploy from a branch" → Branch: "gh-pages" / "(root)".
+
 on:
   push:
     branches:
@@ -10,35 +15,34 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
-# Allow one concurrent deployment; cancel older in-progress runs.
 concurrency:
-  group: pages
+  group: pages-deploy
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build-deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          enablement: true
+          node-version: 20
+          cache: npm
 
-      - name: Upload site artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Publish to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: '.'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages

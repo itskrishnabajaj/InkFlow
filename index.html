@@ -4,91 +4,29 @@
   <meta charset="UTF-8" />
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#87c5ff" />
+  <meta name="theme-color" content="#0b1020" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <title>InkCraft</title>
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="icon-192.svg" />
-  <link rel="apple-touch-icon" href="icon-192.svg" />
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- Load Three.js as an ES module from a CDN. No build step required. -->
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"
-    }
-  }
-  </script>
+  <title>Aethelgard</title>
+  <link rel="manifest" href="/manifest.json" />
+  <link rel="icon" href="/icon-192.svg" />
+  <link rel="apple-touch-icon" href="/icon-192.svg" />
 </head>
 <body>
-  <canvas id="game"></canvas>
+  <canvas id="viewport"></canvas>
 
-  <!-- Touch + game UI overlay -->
-  <div id="ui">
-    <!-- Full-screen look layer sits behind the controls -->
-    <div id="look-layer"></div>
+  <!-- Debug overlay (FPS, world clock, sim stats). Toggle with the ` key. -->
+  <div id="debug-overlay" class="debug-overlay"></div>
 
-    <!-- Crosshair -->
-    <div id="crosshair">+</div>
+  <!-- UI overlay root (HUD/controls mount here in later stages). -->
+  <div id="ui-root"></div>
 
-    <!-- Top status bar -->
-    <div id="topbar">
-      <span id="coords">0, 0, 0</span>
-      <span id="fps">0 fps</span>
-      <div class="top-buttons">
-        <button id="mute-btn" class="icon-btn">🔊</button>
-        <button id="menu-btn" class="icon-btn">☰</button>
-      </div>
-    </div>
-
-    <!-- Left virtual joystick -->
-    <div id="joystick"><div id="knob"></div></div>
-
-    <!-- Right-side action buttons -->
-    <div id="actions">
-      <button id="btn-up" class="action-btn">▲<small>up</small></button>
-      <button id="btn-down" class="action-btn">▼<small>down</small></button>
-      <button id="btn-break" class="action-btn break">⛏<small>break</small></button>
-      <button id="btn-place" class="action-btn place">◼<small>place</small></button>
-    </div>
-
-    <!-- Hotbar (filled by JS) -->
-    <div id="hotbar"></div>
-
-    <!-- Toast notifications -->
-    <div id="toast"></div>
-
-    <!-- Pause / settings menu -->
-    <div id="menu">
-      <div class="menu-panel">
-        <h1>InkCraft</h1>
-        <button id="btn-resume" class="menu-btn primary">Resume</button>
-        <button id="btn-save" class="menu-btn">Save World</button>
-        <button id="btn-new" class="menu-btn danger">New World</button>
-        <label class="rd-row">
-          Render distance: <span id="rd-value">6</span>
-          <input id="rd-slider" type="range" min="3" max="10" value="6" />
-        </label>
-        <p class="hint">
-          Move: left stick &nbsp;•&nbsp; Look: drag the right side<br />
-          Fly: ▲/▼ &nbsp;•&nbsp; ⛏ break &nbsp;•&nbsp; ◼ place<br />
-          Pick a block in the hotbar at the bottom.
-        </p>
-      </div>
-    </div>
+  <div id="boot" class="boot">
+    <div class="boot-title">AETHELGARD</div>
+    <div class="boot-sub">awakening the world…</div>
   </div>
 
-  <!-- Loading screen -->
-  <div id="loading">
-    <div class="loading-box">
-      <div class="loading-logo">⛏ InkCraft</div>
-      <div class="loading-text">Generating world…</div>
-    </div>
-  </div>
-
-  <script type="module" src="src/main.js"></script>
+  <script type="module" src="/src/app/main.ts"></script>
 </body>
 </html>

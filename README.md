@@ -1,80 +1,54 @@
-# ⛏ InkCraft
+# ⚔️ Aethelgard
 
-A Minecraft-style **voxel building game that runs in your browser** — no install,
-no app store, no PC required. Built to play on a tablet (designed and tuned for the
-Xiaomi Pad 7), but it works on any phone, tablet, or desktop browser.
+A **living voxel-world simulation** — not a Minecraft clone. The voxel sandbox is only
+the foundation; the long-term game is an emergent world of agents, settlements, economies,
+politics, dynasties, plagues, and history, in the lineage of Dwarf Fortress / Crusader
+Kings / Mount & Blade / RimWorld.
 
-Live game: **https://itskrishnabajaj.github.io/inkflow/**
-*(works after GitHub Pages is enabled — see "Play on your tablet" below)*
+> **"Nothing in this world exists because it was scripted. Everything exists because
+> another system caused it."** — see [`docs/GAME_BIBLE.md`](docs/GAME_BIBLE.md).
 
----
+Built to run in the browser on a tablet (tuned for Xiaomi Pad 7), TypeScript + Three.js,
+bundled by Vite. NPC intelligence is pure on-device simulation — **no LLM/AI APIs**.
 
-## How to play
+Live (after Pages is enabled): **https://itskrishnabajaj.github.io/InkFlow/**
 
-- **Move** — drag the on-screen **joystick** (bottom-left). Push it all the way for a speed boost.
-- **Look around** — drag anywhere on the **right side** of the screen.
-- **Fly up / down** — the **▲ / ▼** buttons (this is Creative mode — you always fly).
-- **Break a block** — aim with the crosshair, tap **⛏**.
-- **Place a block** — aim at a face, tap **◼**.
-- **Choose a block** — tap a slot in the **hotbar** along the bottom.
-- **Menu** (☰, top-right) — Save, start a New World, or change render distance.
-- **Sound** — 🔊 toggles audio.
+## Status
 
-Desktop testing controls: **WASD** move, **drag mouse** to look, **Space/Shift** up/down,
-**left-click** break, **right-click** place, **number keys** pick a hotbar block.
+**Milestone 1 — Engine + premium voxel sandbox** (in progress, built in stages):
 
-Your world **auto-saves** in the browser and reloads next time you open the game.
+- [x] Stage 1 — engine skeleton: layered architecture, fixed-timestep scheduler + multi-scale
+      world clock, deterministic RNG streams, voxel math (vec3/AABB/DDA), IndexedDB wrapper,
+      Web-Worker pool, event bus, debug overlay, minimal render boot. *(playable: boots to a lit 3D scene)*
+- [ ] Stage 2 — ECS + intents + registries + serialization
+- [ ] Stage 3 — worker terrain gen + greedy meshing + chunk streaming
+- [ ] Stage 4 — physics character controller + touch controls
+- [ ] Stage 5 — block place/break + inventory
+- [ ] Stage 6 — incremental IndexedDB persistence
+- [ ] Stage 7 — visual polish + dynamic quality
+- [ ] Stage 8 — PWA + on-device verification
 
----
-
-## Play on your tablet (one-time setup)
-
-This game is published with **GitHub Pages**. To turn it on (only needed once):
-
-1. On your tablet, open this repo on **github.com**.
-2. Go to **Settings → Pages**.
-3. Under **Build and deployment → Source**, choose **GitHub Actions**.
-4. Wait ~1 minute for the "Deploy InkCraft to GitHub Pages" action to finish
-   (see the **Actions** tab).
-5. Open **https://itskrishnabajaj.github.io/inkflow/** in Chrome.
-6. Tap the **⋮** menu → **Add to Home screen** to install it like an app
-   (launches fullscreen and works offline after the first load).
-
-Every time changes are pushed to the branch, the game re-deploys automatically.
-
----
-
-## How it's built (tech notes)
-
-No build tools, no dependencies to install — just static files served as-is:
-
-- **Three.js** (loaded from a CDN via an ES-module importmap) for WebGL rendering.
-- **Vanilla JavaScript** ES modules under `src/`.
-- **Procedural everything**: terrain from noise, block **textures drawn on a canvas**
-  in code, and **sound effects synthesized** with the Web Audio API — zero asset files.
-
-Performance is tuned for mobile via **chunked meshing**, **hidden-face culling**
-(only visible block faces are drawn), a single shared texture atlas, and a
-tunable render distance.
+## Architecture (downward-only dependencies)
 
 ```
-index.html            # importmap + touch UI overlay
-styles.css            # touch-first HUD styling
-src/
-  main.js             # game loop, wires everything together
-  engine/             # noise, block registry, procedural texture atlas
-  world/              # terrain generation, chunk meshing, chunk manager, day/night sky
-  player/             # flying camera + block raycast, touch/keyboard controls
-  ui/hud.js           # hotbar, FPS, pause menu
-  audio/sfx.js        # synthesized sounds
-  save/storage.js     # localStorage save/load
-.github/workflows/    # GitHub Pages auto-deploy
+platform → core → worldgen → sim → render → ui     (composed in src/app/main.ts)
 ```
 
----
+Simulation is fully independent of rendering: `core`/`sim` never import THREE or touch the
+DOM. Rendering only visualizes state; UI sends intents. See the layout under `src/`.
 
-## Roadmap ideas (future)
+## Develop
 
-- Survival mode (health, mining, day/night danger, simple mobs)
-- More biomes and block types
-- Multiplayer
+```bash
+npm install
+npm run dev        # local dev server (Vite)
+npm run typecheck  # tsc --noEmit
+npm test           # vitest
+npm run build      # tsc + vite build → dist/
+```
+
+## Deploy
+
+Pushing to the working branch triggers `.github/workflows/deploy.yml`, which builds and
+publishes `dist/` to the **`gh-pages`** branch. One-time: in the repo, **Settings → Pages
+→ Source: "Deploy from a branch" → `gh-pages` / `(root)`**.
